@@ -4,11 +4,13 @@ import {
   findUserByEmail,
   findUsers,
   changePassword,
+  updateUserInfo,
 } from './user.service.js';
 import {
   CreateUserInitInput,
   CreateUserFinalInput,
   LoginUserInput,
+  UpdateUserInfoInput,
 } from './user.schema.js';
 import { updateSession, deleteSession } from '@/plugins/fredis/helpers.js';
 import { verifyPassword } from '@/utils/hash.js';
@@ -184,6 +186,22 @@ export const changePasswordFinalHandler = async (
   try {
     await changePassword(body);
     return reply.code(204).send();
+  } catch (e) {
+    return reply.code(500).send(e);
+  }
+};
+
+export const updateUserInfoHandler = async (
+  request: FastifyRequest<{
+    Body: UpdateUserInfoInput;
+  }>,
+  reply: FastifyReply,
+) => {
+  const body = request.body;
+
+  try {
+    const user = await updateUserInfo(body);
+    return reply.code(200).send(user);
   } catch (e) {
     return reply.code(500).send(e);
   }

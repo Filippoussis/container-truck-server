@@ -7,6 +7,7 @@ import {
   logoutUserHandler,
   changePasswordInitHandler,
   changePasswordFinalHandler,
+  updateUserInfoHandler,
 } from './user.controller.js';
 import {
   createUserInitReqJsonSchema,
@@ -16,6 +17,8 @@ import {
   loginUserResJsonSchema,
   changePasswordInitReqSchema,
   changePasswordFinalReqSchema,
+  updateUserInfoReqSchema,
+  updateUserInfoResSchema,
 } from './user.schema.js';
 
 export const userRouter = async (server: FastifyInstance) => {
@@ -71,6 +74,17 @@ export const userRouter = async (server: FastifyInstance) => {
       preValidation: server.authenticate,
     },
     changePasswordFinalHandler,
+  );
+  server.patch(
+    '/updateUserInfo',
+    {
+      schema: {
+        body: updateUserInfoReqSchema,
+        response: { 200: updateUserInfoResSchema },
+      },
+      preValidation: server.authenticate,
+    },
+    updateUserInfoHandler,
   );
   server.get(
     '/getAll',

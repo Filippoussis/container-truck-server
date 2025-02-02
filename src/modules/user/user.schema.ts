@@ -30,6 +30,14 @@ const credentialsZ = {
   }),
 };
 
+const userInfoZ = {
+  email: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  mobilePhone: z.string(),
+  workPhone: z.string(),
+};
+
 // createUser
 const createUserInitReqZodSchema = z.object(emailZ);
 const createUserFinalReqZodSchema = z.object(credentialsZ);
@@ -58,14 +66,21 @@ const loginUserResZodSchema = z.object({
   email: z.string(),
 });
 
-export type LoginUserInput = z.infer<typeof loginUserReqZodSchema>;
-
 export const loginUserReqJsonSchema = zodToJsonSchema(loginUserReqZodSchema);
 export const loginUserResJsonSchema = zodToJsonSchema(loginUserResZodSchema);
+
+export type LoginUserInput = z.infer<typeof loginUserReqZodSchema>;
 
 // changePassword
 const changePasswordInitReqZodSchema = z.object(emailZ);
 const changePasswordFinalReqZodSchema = z.object(credentialsZ);
+
+export const changePasswordInitReqSchema = zodToJsonSchema(
+  changePasswordInitReqZodSchema,
+);
+export const changePasswordFinalReqSchema = zodToJsonSchema(
+  changePasswordFinalReqZodSchema,
+);
 
 export type ChangePasswordInitInput = z.infer<
   typeof changePasswordInitReqZodSchema
@@ -74,9 +89,16 @@ export type ChangePasswordFinalInput = z.infer<
   typeof changePasswordFinalReqZodSchema
 >;
 
-export const changePasswordInitReqSchema = zodToJsonSchema(
-  changePasswordInitReqZodSchema,
+// updateUserInfo
+const updateUserInfoReqZodSchema = z.object(userInfoZ);
+const updateUserInfoResZodSchema = z.object(userInfoZ);
+
+export const updateUserInfoReqSchema = zodToJsonSchema(
+  updateUserInfoReqZodSchema,
 );
-export const changePasswordFinalReqSchema = zodToJsonSchema(
-  changePasswordFinalReqZodSchema,
+
+export const updateUserInfoResSchema = zodToJsonSchema(
+  updateUserInfoResZodSchema,
 );
+
+export type UpdateUserInfoInput = z.infer<typeof updateUserInfoReqZodSchema>;
