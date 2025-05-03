@@ -1,10 +1,16 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import fjwt from '@fastify/jwt';
+import fastifyJwt from '@fastify/jwt';
 import { env } from '@/config/env.js';
 
-const fastifyJwt = async (fastify: FastifyInstance): Promise<void> => {
-  fastify.register(fjwt, {
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    user: { id: string; email: string };
+  }
+}
+
+const fjwt = async (fastify: FastifyInstance): Promise<void> => {
+  fastify.register(fastifyJwt, {
     secret: env.JWT_SECRET,
     cookie: {
       cookieName: 'sessionToken',
@@ -24,4 +30,4 @@ const fastifyJwt = async (fastify: FastifyInstance): Promise<void> => {
   );
 };
 
-export default fp(fastifyJwt);
+export default fp(fjwt);
