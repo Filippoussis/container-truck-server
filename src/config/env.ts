@@ -8,5 +8,8 @@ export const env = zenv({
     HOST: z.string().default('0.0.0.0'),
     JWT_SECRET: z.string(),
     DADATA_TOKEN: z.string(),
+    MAIL_FROM: z.string(),
+    MAIL_USER: z.string(),
+    MAIL_PASS: z.string(),
   }),
 });
