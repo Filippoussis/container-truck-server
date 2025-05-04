@@ -1,8 +1,10 @@
+import { Stream } from 'node:stream';
 import Fastify, { FastifyInstance } from 'fastify';
 // import { RedisClientType } from 'redis';
 import { Transporter } from 'nodemailer';
 import fcors from '@fastify/cors';
 import fcookie from '@fastify/cookie';
+import { prisma } from '@/utils/prisma.js';
 import { fjwt, fmailer } from './plugins/index.js';
 import { userRouter } from './modules/user/user.router.js';
 import { orderRouter } from './modules/order/order.router.js';
@@ -18,11 +20,17 @@ declare module 'fastify' {
   }
 }
 
+function isTTY(stream: Stream | undefined): boolean {
+  return stream !== undefined && (stream as any).isTTY === true;
+}
+
 const server: FastifyInstance = Fastify({
   logger: {
-    transport: {
-      target: 'pino-pretty',
-    },
+    transport: isTTY(process.stdout)
+      ? {
+          target: 'pino-pretty',
+        }
+      : undefined, // Use default NDJSON logger
   },
 });
 
@@ -40,13 +48,48 @@ server.register(userRouter, { prefix: '/api/users' });
 server.register(orderRouter, { prefix: '/api/orders' });
 server.register(dadataRouter, { prefix: '/api/dadata' });
 
-const start = async () => {
+const checkDatabaseConnection = async () => {
+  try {
+    await prisma.$connect();
+    server.log.info('Database connection successful (Prisma)');
+    await prisma.$disconnect();
+  } catch (error) {
+    server.log.error('Error connecting to database:', error);
+  }
+};
+
+const startServer = async () => {
   try {
     await server.listen({ port: env.PORT, host: env.HOST });
-  } catch (err) {
-    server.log.error(err);
+  } catch (error) {
+    server.log.error('Error starting server:', error);
     process.exit(1);
   }
 };
 
-start();
+const shutdownServer = async () => {
+  server.log.info('Shutting down server...');
+  try {
+    await server.close();
+    server.log.info('Server stopped');
+    await prisma.$disconnect();
+    server.log.info('Database connection closed (Prisma)');
+    process.exit(0);
+  } catch (error) {
+    server.log.error('Error during shutdown:', error);
+    process.exit(1);
+  }
+};
+
+const main = async () => {
+  await checkDatabaseConnection();
+  await startServer();
+
+  process.on('SIGINT', shutdownServer);
+  process.on('SIGTERM', shutdownServer);
+};
+
+main().catch((error) => {
+  server.log.fatal('Unhandled error during startup:', error);
+  process.exit(1);
+});
