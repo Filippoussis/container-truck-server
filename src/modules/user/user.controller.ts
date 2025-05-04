@@ -12,7 +12,7 @@ import {
   LoginUserInput,
   UpdateUserInfoInput,
 } from './user.schema.js';
-import { updateSession, deleteSession } from '@/plugins/fredis/helpers.js';
+// import { updateSession, deleteSession } from '@/plugins/fredis/helpers.js';
 import { verifyPassword } from '@/utils/hash.js';
 
 export const createUserInitHandler = async (
@@ -72,7 +72,7 @@ export const loginUserHandler = async (
     const user = await findUserByEmail(body.email);
 
     if (!user) {
-      return reply.code(401).send({ message: 'Invalid email or password' });
+      return reply.code(400).send({ message: 'Invalid email or password' });
     }
 
     const passwordIsVerified = verifyPassword({
@@ -82,7 +82,7 @@ export const loginUserHandler = async (
     });
 
     if (!passwordIsVerified) {
-      return reply.code(401).send({ message: 'Invalid email or password' });
+      return reply.code(400).send({ message: 'Invalid email or password' });
     }
 
     const { password, salt, ...rest } = user;
@@ -90,16 +90,16 @@ export const loginUserHandler = async (
 
     const sessionToken = await reply.jwtSign(
       { id, email },
-      { expiresIn: '5m' },
+      { expiresIn: '10m' },
     );
 
-    updateSession(request, id, sessionToken);
+    // updateSession(request, id, sessionToken);
 
     reply.setCookie('sessionToken', sessionToken, {
       // domain: 'localhost',
       path: '/',
       httpOnly: true,
-      maxAge: 300,
+      maxAge: 600,
       sameSite: 'none',
     });
 
@@ -123,7 +123,7 @@ export const logoutUserHandler = async (
           id: string;
         }>(sessionToken);
         if (decodedToken !== null) {
-          deleteSession(request, decodedToken.id);
+          // deleteSession(request, decodedToken.id);
 
           reply
             .setCookie('sessionToken', '', {
@@ -205,6 +205,12 @@ export const updateUserInfoHandler = async (
   } catch (e) {
     return reply.code(500).send(e);
   }
+};
+
+export const getUserHandler = async (request: FastifyRequest) => {
+  const { email } = request.user;
+  const user = await findUserByEmail(email);
+  return user;
 };
 
 export const getUsersHandler = async () => {

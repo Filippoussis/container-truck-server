@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import {
+  getUserHandler,
   createUserInitHandler,
   createUserFinalHandler,
   loginUserHandler,
@@ -55,9 +56,9 @@ export const userRouter = async (server: FastifyInstance) => {
     loginUserHandler,
   );
 
-  server.get('/logout', logoutUserHandler);
+  server.post('/logout', logoutUserHandler);
   server.post(
-    '/changePassword',
+    '/reset-password',
     {
       schema: {
         body: changePasswordInitReqSchema,
@@ -66,7 +67,7 @@ export const userRouter = async (server: FastifyInstance) => {
     changePasswordInitHandler,
   );
   server.patch(
-    '/changePassword',
+    '/reset-password',
     {
       schema: {
         body: changePasswordFinalReqSchema,
@@ -86,9 +87,10 @@ export const userRouter = async (server: FastifyInstance) => {
     },
     updateUserInfoHandler,
   );
+  server.get('/me', { preValidation: [server.authenticate] }, getUserHandler);
   server.get(
     '/getAll',
-    { preValidation: [server.authenticate, server.hasSession] },
+    { preValidation: [server.authenticate] },
     getUsersHandler,
   );
 };
