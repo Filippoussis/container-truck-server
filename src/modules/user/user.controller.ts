@@ -28,7 +28,7 @@ export const createUserInitHandler = async (
 
     const activateToken = await reply.jwtSign({ email }, { expiresIn: '5m' });
 
-    const link = `http://localhost:5173/register/${activateToken}`;
+    const link = `https://container-truck.ru/register/${activateToken}`;
     const html = `<a href=${link}>${link}</a>`;
 
     if (!findedUser) {
@@ -96,11 +96,11 @@ export const loginUserHandler = async (
     // updateSession(request, id, sessionToken);
 
     reply.setCookie('sessionToken', sessionToken, {
-      // domain: 'localhost',
+      domain: 'container-truck.ru',
       path: '/',
       httpOnly: true,
+      secure: true,
       maxAge: 600,
-      sameSite: 'none',
     });
 
     return {
@@ -127,11 +127,11 @@ export const logoutUserHandler = async (
 
           reply
             .setCookie('sessionToken', '', {
-              // domain: 'localhost',
+              domain: 'container-truck.ru',
               path: '/',
               httpOnly: true,
+              secure: true,
               maxAge: 0,
-              sameSite: 'none',
             })
             .code(204)
             .send();
@@ -160,7 +160,7 @@ export const changePasswordInitHandler = async (
         { expiresIn: '5m' },
       );
 
-      const link = `http://localhost:5173/changePassword/${resetToken}`;
+      const link = `https://container-truck.ru/changePassword/${resetToken}`;
       const html = `<a href=${link}>${link}</a>`;
 
       reply.server.mailer.sendMail({
