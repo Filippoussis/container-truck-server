@@ -18,6 +18,7 @@ const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   try {
     transporter = createTransport(transport, defaults);
   } catch (error) {
+    fastify.log.error(error);
     throw error;
   }
 
