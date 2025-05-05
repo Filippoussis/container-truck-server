@@ -9,6 +9,7 @@ export const env = zenv({
     JWT_SECRET: z.string(),
     DADATA_TOKEN: z.string(),
     MAIL_FROM: z.string(),
+    MAIL_HOST: z.string(),
     MAIL_USER: z.string(),
     MAIL_PASS: z.string(),
   }),

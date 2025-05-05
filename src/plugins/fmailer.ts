@@ -6,7 +6,7 @@ import { env } from '@/config/env.js';
 const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   const defaults = { from: env.MAIL_FROM };
   const transport = {
-    service: 'yandex',
+    host: env.MAIL_HOST,
     auth: {
       user: env.MAIL_USER,
       pass: env.MAIL_PASS,
