@@ -1,6 +1,6 @@
 import { Stream } from 'node:stream';
 import Fastify, { FastifyInstance } from 'fastify';
-// import { RedisClientType } from 'redis';
+import { RedisClientType } from 'redis';
 import { Transporter } from 'nodemailer';
 // import fcors from '@fastify/cors';
 import fcookie from '@fastify/cookie';
@@ -15,7 +15,7 @@ declare module 'fastify' {
   export interface FastifyInstance {
     authenticate: any;
     mailer: Transporter;
-    // redis: RedisClientType;
+    redis: RedisClientType;
     hasSession: any;
   }
 }

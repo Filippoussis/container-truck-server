@@ -19,7 +19,7 @@ export const createOrderHandler = async (
   }
 };
 
-export const getOrdersHandler = async (request: FastifyRequest) => {
+export const getOrdersHandler = async () => {
   // const { email } = request.user;
   const orders = await findOrders();
   return orders;
