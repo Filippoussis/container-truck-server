@@ -44,9 +44,9 @@ server.register(fmailer);
 //   credentials: true,
 // });
 
-server.register(userRouter, { prefix: '/api/users' });
-server.register(orderRouter, { prefix: '/api/orders' });
-server.register(dadataRouter, { prefix: '/api/dadata' });
+server.register(userRouter, { prefix: '/users' });
+server.register(orderRouter, { prefix: '/orders' });
+server.register(dadataRouter, { prefix: '/dadata' });
 
 const checkDatabaseConnection = async () => {
   try {
