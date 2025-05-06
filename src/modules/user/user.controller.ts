@@ -1,4 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { verifyPassword } from '../../utils/hash.js';
+import { env } from '../../config/env.js';
 import {
   createUser,
   findUserByEmail,
@@ -13,7 +15,6 @@ import {
   UpdateUserInfoInput,
 } from './user.schema.js';
 // import { updateSession, deleteSession } from '@/plugins/fredis/helpers.js';
-import { verifyPassword } from '../../utils/hash.js';
 
 export const createUserInitHandler = async (
   request: FastifyRequest<{
@@ -25,18 +26,17 @@ export const createUserInitHandler = async (
 
   try {
     const findedUser = await findUserByEmail(email);
-    // TODO: solve send mail
-    // const activateToken = await reply.jwtSign({ email }, { expiresIn: '5m' });
+    const activateToken = await reply.jwtSign({ email }, { expiresIn: '5m' });
 
-    // const link = `https://container-truck.ru/register/${activateToken}`;
-    // const html = `<a href=${link}>${link}</a>`;
+    const link = `${env.CLIENT_LOCAL_HOST}:${env.CLIENT_LOCAL_PORT}/register/${activateToken}`;
+    const html = `<a href=${link}>${link}</a>`;
 
     if (!findedUser) {
-      // reply.server.mailer.sendMail({
-      //   to: 'androsphilippos@gmail.com',
-      //   subject: 'Подтверждение регистрации',
-      //   html,
-      // });
+      reply.server.mailer.sendMail({
+        to: 'androsphilippos@gmail.com',
+        subject: 'Подтверждение регистрации',
+        html,
+      });
     }
     return reply.code(204).send();
   } catch (err) {
@@ -96,11 +96,12 @@ export const loginUserHandler = async (
     // updateSession(request, id, sessionToken);
 
     reply.setCookie('sessionToken', sessionToken, {
-      domain: 'container-truck.ru',
+      // domain: 'container-truck.ru',
       path: '/',
       httpOnly: true,
-      secure: true,
+      // secure: true,
       maxAge: 600,
+      sameSite: 'none',
     });
 
     return {
@@ -127,11 +128,12 @@ export const logoutUserHandler = async (
 
           reply
             .setCookie('sessionToken', '', {
-              domain: 'container-truck.ru',
+              // domain: 'container-truck.ru',
               path: '/',
               httpOnly: true,
-              secure: true,
+              // secure: true,
               maxAge: 0,
+              sameSite: 'none',
             })
             .code(204)
             .send();
@@ -155,18 +157,17 @@ export const changePasswordInitHandler = async (
     const findedUser = await findUserByEmail(email);
 
     if (findedUser) {
-      // TODO: solve send mail
-      // const resetToken = await reply.jwtSign(
-      //   { email: findedUser.email },
-      //   { expiresIn: '5m' },
-      // );
-      // const link = `https://container-truck.ru/changePassword/${resetToken}`;
-      // const html = `<a href=${link}>${link}</a>`;
-      // reply.server.mailer.sendMail({
-      //   to: 'androsphilippos@gmail.com',
-      //   subject: 'Сброс пароля',
-      //   html,
-      // });
+      const resetToken = await reply.jwtSign(
+        { email: findedUser.email },
+        { expiresIn: '5m' },
+      );
+      const link = `${env.CLIENT_LOCAL_HOST}:${env.CLIENT_LOCAL_PORT}/changePassword/${resetToken}`;
+      const html = `<a href=${link}>${link}</a>`;
+      reply.server.mailer.sendMail({
+        to: 'androsphilippos@gmail.com',
+        subject: 'Сброс пароля',
+        html,
+      });
     }
     return reply.code(204).send();
   } catch (err) {

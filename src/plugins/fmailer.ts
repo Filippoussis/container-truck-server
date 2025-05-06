@@ -6,7 +6,8 @@ import { env } from '../config/env.js';
 const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   const defaults = { from: env.MAIL_FROM };
   const transport = {
-    host: env.MAIL_HOST,
+    // host: env.MAIL_HOST,
+    service: env.MAIL_HOST,
     auth: {
       user: env.MAIL_USER,
       pass: env.MAIL_PASS,
@@ -18,7 +19,6 @@ const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   try {
     transporter = createTransport(transport, defaults);
   } catch (error) {
-    fastify.log.error(error);
     throw error;
   }
 

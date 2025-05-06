@@ -2,7 +2,7 @@ import { Stream } from 'node:stream';
 import Fastify, { FastifyInstance } from 'fastify';
 import { RedisClientType } from 'redis';
 import { Transporter } from 'nodemailer';
-// import fcors from '@fastify/cors';
+import fcors from '@fastify/cors';
 import fcookie from '@fastify/cookie';
 import { prisma } from './utils/prisma.js';
 import { fjwt, fmailer } from './plugins/index.js';
@@ -39,14 +39,14 @@ server.register(fjwt);
 server.register(fmailer);
 // server.register(fredis);
 
-// server.register(fcors, {
-//   origin: 'http://localhost:5173',
-//   credentials: true,
-// });
+server.register(fcors, {
+  origin: `${env.CLIENT_LOCAL_HOST}:${env.CLIENT_LOCAL_PORT}`,
+  credentials: true,
+});
 
-server.register(userRouter, { prefix: '/users' });
-server.register(orderRouter, { prefix: '/orders' });
-server.register(dadataRouter, { prefix: '/dadata' });
+server.register(userRouter, { prefix: 'api/users' });
+server.register(orderRouter, { prefix: 'api/orders' });
+server.register(dadataRouter, { prefix: 'api/dadata' });
 
 const checkDatabaseConnection = async () => {
   try {

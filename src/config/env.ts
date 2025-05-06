@@ -12,5 +12,7 @@ export const env = zenv({
     MAIL_HOST: z.string(),
     MAIL_USER: z.string(),
     MAIL_PASS: z.string(),
+    CLIENT_LOCAL_HOST: z.string(),
+    CLIENT_LOCAL_PORT: z.string(),
   }),
 });
