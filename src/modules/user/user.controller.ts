@@ -13,7 +13,7 @@ import {
   UpdateUserInfoInput,
 } from './user.schema.js';
 // import { updateSession, deleteSession } from '@/plugins/fredis/helpers.js';
-import { verifyPassword } from '@/utils/hash.js';
+import { verifyPassword } from '../../utils/hash.js';
 
 export const createUserInitHandler = async (
   request: FastifyRequest<{

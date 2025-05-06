@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zenv } from '@/libs/zenv/zenv.js';
+import { zenv } from '../libs/zenv/zenv.js';
 
 export const env = zenv({
   dotenv: true,

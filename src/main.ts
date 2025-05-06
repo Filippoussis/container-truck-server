@@ -4,7 +4,7 @@ import { RedisClientType } from 'redis';
 import { Transporter } from 'nodemailer';
 // import fcors from '@fastify/cors';
 import fcookie from '@fastify/cookie';
-import { prisma } from '@/utils/prisma.js';
+import { prisma } from './utils/prisma.js';
 import { fjwt, fmailer } from './plugins/index.js';
 import { userRouter } from './modules/user/user.router.js';
 import { orderRouter } from './modules/order/order.router.js';

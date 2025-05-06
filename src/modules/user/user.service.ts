@@ -1,10 +1,10 @@
-import { prisma } from '@/utils/prisma.js';
+import { prisma } from '../../utils/prisma.js';
 import {
   CreateUserFinalInput,
   ChangePasswordFinalInput,
   UpdateUserInfoInput,
 } from './user.schema.js';
-import { hashPassword } from '@/utils/hash.js';
+import { hashPassword } from '../../utils/hash.js';
 
 export const createUser = async (input: CreateUserFinalInput) => {
   const { email, password } = input;

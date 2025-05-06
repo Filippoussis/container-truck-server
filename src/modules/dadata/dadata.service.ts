@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { env } from '@/config/env.js';
+import { env } from '../../config/env.js';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: 'https://suggestions.dadata.ru',

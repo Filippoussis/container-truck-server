@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import fp from 'fastify-plugin';
 import { createClient, RedisClientType } from 'redis';
-import { SessionNotFoundError } from '@/utils/errors.js';
+import { SessionNotFoundError } from '../../utils/errors.js';
 import { close, hasSession } from './helpers.js';
 
 const fastifyRedis = async (fastify: FastifyInstance): Promise<void> => {

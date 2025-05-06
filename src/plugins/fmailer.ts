@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import { createTransport } from 'nodemailer';
-import { env } from '@/config/env.js';
+import { env } from '../config/env.js';
 
 const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   const defaults = { from: env.MAIL_FROM };

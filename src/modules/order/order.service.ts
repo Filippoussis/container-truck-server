@@ -1,4 +1,4 @@
-import { prisma } from '@/utils/prisma.js';
+import { prisma } from '../../utils/prisma.js';
 import { CreateOrderInput } from './order.schema.js';
 
 export const createOrder = async (input: CreateOrderInput, email: string) => {
