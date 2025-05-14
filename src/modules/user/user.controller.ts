@@ -26,17 +26,17 @@ export const createUserInitHandler = async (
   try {
     const findedUser = await findUserByEmail(email);
     // TODO: solve send mail
-    // const activateToken = await reply.jwtSign({ email }, { expiresIn: '5m' });
+    const activateToken = await reply.jwtSign({ email }, { expiresIn: '5m' });
 
-    // const link = `https://container-truck.ru/register/${activateToken}`;
-    // const html = `<a href=${link}>${link}</a>`;
+    const link = `https://container-truck.ru/register/${activateToken}`;
+    const html = `<a href=${link}>${link}</a>`;
 
     if (!findedUser) {
-      // reply.server.mailer.sendMail({
-      //   to: 'androsphilippos@gmail.com',
-      //   subject: 'Подтверждение регистрации',
-      //   html,
-      // });
+      reply.server.mailer.sendMail({
+        to: 'androsphilippos@gmail.com',
+        subject: 'Подтверждение регистрации',
+        html,
+      });
     }
     return reply.code(204).send();
   } catch (err) {
@@ -156,17 +156,17 @@ export const changePasswordInitHandler = async (
 
     if (findedUser) {
       // TODO: solve send mail
-      // const resetToken = await reply.jwtSign(
-      //   { email: findedUser.email },
-      //   { expiresIn: '5m' },
-      // );
-      // const link = `https://container-truck.ru/changePassword/${resetToken}`;
-      // const html = `<a href=${link}>${link}</a>`;
-      // reply.server.mailer.sendMail({
-      //   to: 'androsphilippos@gmail.com',
-      //   subject: 'Сброс пароля',
-      //   html,
-      // });
+      const resetToken = await reply.jwtSign(
+        { email: findedUser.email },
+        { expiresIn: '5m' },
+      );
+      const link = `https://container-truck.ru/changePassword/${resetToken}`;
+      const html = `<a href=${link}>${link}</a>`;
+      reply.server.mailer.sendMail({
+        to: 'androsphilippos@gmail.com',
+        subject: 'Сброс пароля',
+        html,
+      });
     }
     return reply.code(204).send();
   } catch (err) {
