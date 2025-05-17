@@ -7,8 +7,8 @@ const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   const defaults = { from: env.MAIL_FROM };
   const transport = {
     host: env.MAIL_HOST,
-    port: 25,
-    secure: false,
+    port: 465,
+    secure: true,
     auth: {
       user: env.MAIL_USER,
       pass: env.MAIL_PASS,
