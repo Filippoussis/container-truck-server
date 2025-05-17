@@ -8,7 +8,7 @@ const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
   const transport = {
     host: env.MAIL_HOST,
     port: 465,
-    secure: true,
+    secure: false,
     auth: {
       user: env.MAIL_USER,
       pass: env.MAIL_PASS,
@@ -19,6 +19,7 @@ const fastifyMailer = async (fastify: FastifyInstance): Promise<void> => {
 
   try {
     transporter = createTransport(transport, defaults);
+    console.log('transporter', transporter);
   } catch (error) {
     fastify.log.error(error);
     throw error;
